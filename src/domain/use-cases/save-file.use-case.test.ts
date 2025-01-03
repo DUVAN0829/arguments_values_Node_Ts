@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { SaveFile } from './save-file.use-case';
+import { error } from 'console';
 
 
 describe('SaveFileUseCase', () => {
@@ -48,6 +49,32 @@ describe('SaveFileUseCase', () => {
         expect(result).toBeTruthy()
         expect(fileExists).toBe(true)
         expect(fileContet).toBe(options.fileContent)
+
+    })
+
+    test('should return false if directory could not be saved', () => {
+
+        const saveFile = new SaveFile()
+        const mkdirSpy = jest.spyOn(fs, 'mkdirSync').mockImplementation(() => { throw new Error('This is a custom error message from testing.') })
+
+        const result = saveFile.execute({ fileContent: 'custom content' })
+
+        expect(result).toBe(false)
+        
+        mkdirSpy.mockRestore()
+
+    })
+
+    test('should return false if file could not be created', () => {
+
+        const saveFile = new SaveFile()
+        const writeSpy = jest.spyOn(fs, 'mkdirSync').mockImplementation(() => { throw new Error('This is a custom error writing from testing.') })
+
+        const result = saveFile.execute({ fileContent: 'custom content' })
+
+        expect(result).toBe(false)
+
+        writeSpy.mockRestore()
 
     })
 

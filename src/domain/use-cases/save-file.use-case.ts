@@ -25,7 +25,7 @@ export class SaveFile implements SaveFileUseCase {
 
         } catch (error) {
 
-            console.error(error)
+            // console.error(error) Logger
             return false
 
         }
